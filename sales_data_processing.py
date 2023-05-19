@@ -22,7 +22,7 @@ def sales_Data_RUL(data_path, warning_time):
 
     # Mark all data within the warning time
     for i in range(0, failed_num):
-        data_form.loc[range(failed_labe.index[i] - wtimes, failed_labe.index[i] + 1), "reasult"] = 1
-
+        data_form.loc[range(failed_labe.index[i] - int(wtimes), failed_labe.index[i] + 1), "reasult"] = 1
+    data_form.to_csv('newRULData')
 if __name__ == '__main__':
     sales_Data_RUL('Khery_366.csv', 3)
