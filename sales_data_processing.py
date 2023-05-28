@@ -10,7 +10,7 @@ def slaes_wtimes(dForm, warnTime):
     return wtimes
 
 #打标
-def label_data(data, pop, times, shiftFlag = True):
+def label_data(data, pop, times, shiftFlag = False):
 
     failed_form = pandas.DataFrame()
     # Collect all rows that exceed the Overall Index threshold 
@@ -40,7 +40,7 @@ def label_data(data, pop, times, shiftFlag = True):
         preTime = index - times
         if preTime < 0 :
             preTime = 0
-        if shiftFlag == True:
+        if shiftFlag == False:
             data.loc[range(preTime, index + 1), "label"] = failed_form.loc[index, "label"]
         else:
             data.loc[index, "label"] = failed_form.loc[index, "label"]
@@ -81,7 +81,7 @@ def sales_data_timeShift(data_form, warning_time, pop, saveName = ""):
     data_form = pandas.concat([data_form, y], axis=1)
     data_form = data_form.reset_index(drop=True)
 
-    label_data(data_form, pop, wtimes)
+    label_data(data_form, pop, wtimes, True)
     translatePP(data_form)
     if saveName != "":
         data_form.to_csv(saveName)
@@ -90,4 +90,4 @@ def sales_data_timeShift(data_form, warning_time, pop, saveName = ""):
 def buildData(data_form, warning_time, pop):
     for i in range(len(pop)):
         sales_data_timeShift(data_form, warning_time, [pop[i]], saveName = f"timeShift_label_{pop[i]}_warningtime{warning_time}.csv")
-        sales_Data_RUL(data_form, warning_time, [50, 100], saveName = f"RUL_label_{pop[i]}_warningtime{warning_time}.csv")
+        sales_Data_RUL(data_form, warning_time, [pop[i]], saveName = f"RUL_label_{pop[i]}_warningtime{warning_time}.csv")
