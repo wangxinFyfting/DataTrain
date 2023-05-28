@@ -10,7 +10,7 @@ def slaes_wtimes(dForm, warnTime):
     return wtimes
 
 #打标
-def label_data(data, pop, times):
+def label_data(data, pop, times, shiftFlag = True):
 
     failed_form = pandas.DataFrame()
     # Collect all rows that exceed the Overall Index threshold 
@@ -40,7 +40,10 @@ def label_data(data, pop, times):
         preTime = index - times
         if preTime < 0 :
             preTime = 0
-        data.loc[range(preTime, index + 1), "label"] = failed_form.loc[index, "label"]
+        if shiftFlag == True:
+            data.loc[range(preTime, index + 1), "label"] = failed_form.loc[index, "label"]
+        else:
+            data.loc[index, "label"] = failed_form.loc[index, "label"]
     return data
 
 # 转换Primary Pollutant标签
@@ -50,7 +53,7 @@ def translatePP(data_form):
 #RUL数据处理
 def sales_Data_RUL(data_form, warning_time, pop, saveName = ""):
     # Obtain raw data and format the time
-    data_form.loc[:, "Time Point"] = pandas.to_datetime(data_form["Time Point"], format='%Y/%m/%Y %H:%M').copy()
+    data_form.loc[:, "Time Point"] = pandas.to_datetime(data_form["Time Point"], format='%Y/%m/%d %H:%M').copy()
     data_form = data_form.sort_values(by="Time Point", ascending=True)
     data_form = data_form.reset_index(drop=True)
     wtimes = slaes_wtimes(data_form, warning_time)    
@@ -63,7 +66,7 @@ def sales_Data_RUL(data_form, warning_time, pop, saveName = ""):
 # timeshift数据处理
 def sales_data_timeShift(data_form, warning_time, pop, saveName = ""):
     # Obtain raw data and format the time
-    data_form.loc[:, "Time Point"] = pandas.to_datetime(data_form["Time Point"], format='%Y/%m/%Y %H:%M')
+    data_form.loc[:, "Time Point"] = pandas.to_datetime(data_form["Time Point"], format='%Y/%m/%d %H:%M')
     data_form = data_form.sort_values(by="Time Point", ascending=True)
     data_form = data_form.reset_index(drop=True)
     wtimes = slaes_wtimes(data_form, warning_time)
@@ -83,3 +86,8 @@ def sales_data_timeShift(data_form, warning_time, pop, saveName = ""):
     if saveName != "":
         data_form.to_csv(saveName)
     return data_form
+
+def buildData(data_form, warning_time, pop):
+    for i in range(len(pop)):
+        sales_data_timeShift(data_form, warning_time, [pop[i]], saveName = f"timeShift_label_{pop[i]}_warningtime{warning_time}.csv")
+        sales_Data_RUL(data_form, warning_time, [50, 100], saveName = f"RUL_label_{pop[i]}_warningtime{warning_time}.csv")
