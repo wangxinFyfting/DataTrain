@@ -91,3 +91,9 @@ def buildData(data_form, warning_time, pop):
     for i in range(len(pop)):
         sales_data_timeShift(data_form, warning_time, [pop[i]], saveName = f"timeShift_label_{pop[i]}_warningtime{warning_time}.csv")
         sales_Data_RUL(data_form, warning_time, [pop[i]], saveName = f"RUL_label_{pop[i]}_warningtime{warning_time}.csv")
+
+# if __name__ == '__main__':
+#     print("Khery")
+#     data_form = pandas.read_csv('Khery_366.csv')
+#     data_form = data_form.iloc[0:172800, :].copy()
+#     buildData(data_form, 600, [100, 150, 250])
