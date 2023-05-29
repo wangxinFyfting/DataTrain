@@ -9,6 +9,7 @@ def slaes_wtimes(dForm, warnTime):
     wtimes = int(warnTime / delta_seconds)
     return wtimes
 
+
 #打标
 def label_data(data, pop, times, shiftFlag = False):
 
